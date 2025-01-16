@@ -1,21 +1,18 @@
 <?php
 
-namespace NotificationChannels\Messagebird;
+namespace NotificationChannels\BIrd;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Notifications\Events\NotificationFailed;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Messagebird\Exceptions\CouldNotSendNotification;
 
-class MessagebirdChannel
+class BirdChannel
 {
-    /** @var \NotificationChannels\Messagebird\MessagebirdClient */
-    protected $client;
-    private $dispatcher;
+    private Dispatcher $dispatcher;
 
-    public function __construct(MessagebirdClient $client, Dispatcher $dispatcher = null)
+    public function __construct(public BirdClient $client, Dispatcher $dispatcher = null)
     {
-        $this->client = $client;
         $this->dispatcher = $dispatcher;
     }
 
@@ -35,10 +32,10 @@ class MessagebirdChannel
         $data = [];
 
         if (is_string($message)) {
-            $message = MessagebirdMessage::create($message);
+            $message = new BirdMessage($message);
         }
 
-        if ($to = $notifiable->routeNotificationFor('messagebird')) {
+        if ($to = $notifiable->routeNotificationFor('bird')) {
             $message->setRecipients($to);
         }
 
@@ -46,7 +43,7 @@ class MessagebirdChannel
             $data = $this->client->send($message);
 
             if ($this->dispatcher !== null) {
-                $this->dispatcher->dispatch('messagebird-sms', [$notifiable, $notification, $data]);
+                $this->dispatcher->dispatch('bird-sms', [$notifiable, $notification, $data]);
             }
         } catch (CouldNotSendNotification $e) {
             if ($this->dispatcher !== null) {
@@ -54,7 +51,7 @@ class MessagebirdChannel
                     new NotificationFailed(
                         $notifiable,
                         $notification,
-                        'messagebird-sms',
+                        'bird-sms',
                         $e->getMessage()
                     )
                 );

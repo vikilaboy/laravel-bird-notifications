@@ -1,26 +1,25 @@
 <?php
 
-namespace NotificationChannels\Messagebird\Test;
+namespace NotificationChannels\Bird\Test;
 
 use GuzzleHttp\Client;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
 use Mockery;
-use NotificationChannels\Messagebird\MessagebirdChannel;
-use NotificationChannels\Messagebird\MessagebirdClient;
-use NotificationChannels\Messagebird\MessagebirdMessage;
+use NotificationChannels\Bird\BirdChannel;
+use NotificationChannels\Bird\BirdClient;
+use NotificationChannels\Bird\BirdMessage;
 use PHPUnit\Framework\TestCase;
 
-class MessagebirdChannelTest extends TestCase
+class BirdChannelTest extends TestCase
 {
     public function setUp(): void
     {
         $this->notification = new TestNotification;
         $this->string_notification = new TestStringNotification;
         $this->notifiable = new TestNotifiable;
-        $this->guzzle = Mockery::mock(new Client());
-        $this->client = Mockery::mock(new MessagebirdClient($this->guzzle, 'test_ek1qBbKbHoA20gZHM40RBjxzX'));
-        $this->channel = new MessagebirdChannel($this->client);
+        $this->client = Mockery::mock(new BirdClient('test_ek1qBbKbHoA20gZHM40RBjxzX'));
+        $this->channel = new BirdChannel($this->client);
     }
 
     public function tearDown(): void
@@ -32,8 +31,8 @@ class MessagebirdChannelTest extends TestCase
     /** @test */
     public function it_can_be_instantiated()
     {
-        $this->assertInstanceOf(MessagebirdClient::class, $this->client);
-        $this->assertInstanceOf(MessagebirdChannel::class, $this->channel);
+        $this->assertInstanceOf(BirdClient::class, $this->client);
+        $this->assertInstanceOf(BirdChannel::class, $this->channel);
     }
 
     /** @test */
@@ -65,7 +64,7 @@ class TestNotification extends Notification
 {
     public function toMessagebird($notifiable)
     {
-        return (new MessagebirdMessage('Message content'))->setOriginator('APPNAME')->setRecipients('31650520659');
+        return (new BirdMessage('Message content'))->setOriginator('APPNAME')->setRecipients('31650520659');
     }
 }
 

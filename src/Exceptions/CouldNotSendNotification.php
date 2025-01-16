@@ -1,17 +1,16 @@
 <?php
 
-namespace NotificationChannels\Messagebird\Exceptions;
+namespace NotificationChannels\Bird\Exceptions;
 
 use Exception;
 
 class CouldNotSendNotification extends Exception
 {
-    /**
-     * @param Exception $exception
-     * @return static
-     */
-    public static function serviceRespondedWithAnError(Exception $exception)
+    public function __construct(Exception $exception)
     {
-        return new static("MessageBird service responded with an error '{$exception->getCode()}: {$exception->getMessage()}'");
+        parent::__construct(
+            sprintf('Bird service responded with an error: %s:%s', $exception->getCode(), $exception->getMessage()),
+            $exception->getCode()
+        );
     }
 }

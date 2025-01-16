@@ -1,7 +1,7 @@
 {
-    "name": "laravel-notification-channels/messagebird",
-    "description": "MessageBird notification channel for Laravel 5.x",
-    "homepage": "https://github.com/laravel-notification-channels/messagebird",
+    "name": "vikilaboy/laravel-bird-notifications",
+    "description": "Bird notification channel for Laravel 11.x",
+    "homepage": "https://github.com/vikilaboy/laravel-bird-notifications",
     "license": "MIT",
     "authors": [
         {
@@ -9,14 +9,19 @@
             "email": "psteenbergen@gmail.com",
             "homepage": "https://3ws.nl",
             "role": "Developer"
+        },
+        {
+            "name": "Victor Niculae",
+            "email": "victor@niculae.net",
+            "homepage": "https://niculae.net",
+            "role": "Developer"
         }
     ],
     "require": {
-        "php": "^8.0|^8.1",
+        "php": "^8.0|^8.1|^8.2|^8.3|^8.4",
         "illuminate/notifications": "^9.0|^10.0|^11.0",
         "illuminate/support": "^9.0|^10.0|^11.0",
         "illuminate/queue": "^9.0|^10.0|^11.0",
-        "guzzlehttp/guzzle": "^7.2",
         "ext-json": "*"
     },
     "require-dev": {
@@ -25,12 +30,12 @@
     },
     "autoload": {
         "psr-4": {
-            "NotificationChannels\\Messagebird\\": "src"
+            "NotificationChannels\\Bird\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "NotificationChannels\\Messagebird\\Test\\": "tests"
+            "NotificationChannels\\Bird\\Test\\": "tests"
         }
     },
     "scripts": {
@@ -43,7 +48,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "NotificationChannels\\Messagebird\\MessagebirdServiceProvider"
+                "NotificationChannels\\Bird\\BirdServiceProvider"
             ]
         }
     }
