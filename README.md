@@ -122,16 +122,12 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 $ composer test
 ```
 
-## Security
-
-If you discover any security related issues, please email psteenbergen@gmail.com instead of using the issue tracker.
-
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ## Credits
-
+- [Victor Niculae](https://niculae.net)
 - [Peter Steenbergen](https://3ws.nl)
 - [Tonko Mulder](https://tonkomulder.nl)
 - [All Contributors](../../contributors)
