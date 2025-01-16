@@ -23,6 +23,13 @@ class BirdMessage
         }
     }
 
+    public function setBody(string $body): static
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
     public function setOriginator(string $originator): static
     {
         $this->originator = $originator;

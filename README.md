@@ -1,4 +1,4 @@
-# Messagebird notifications channel for Laravel
+# Bird notifications channel for Laravel
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/laravel-notification-channels/messagebird.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/messagebird)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -9,13 +9,13 @@
 [![Code Coverage](https://img.shields.io/scrutinizer/coverage/g/laravel-notification-channels/messagebird/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/messagebird/?branch=master)
 [![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/messagebird.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/messagebird)
 
-This package makes it easy to send [Messagebird SMS notifications](https://github.com/messagebird/php-rest-api) with Laravel.
+This package makes it easy to send [Bird SMS notifications](https://github.com/messagebird/php-rest-api) with Laravel.
 
 ## Contents
 
 - [Requirements](#requirements)
 - [Installation](#installation)
-- [Setting up your Messagebird account](#setting-up-your-messagebird-account)
+- [Setting up your Bird account](#setting-up-your-messagebird-account)
 - [Usage](#usage)
 - [Changelog](#changelog)
 - [Testing](#testing)
@@ -26,7 +26,7 @@ This package makes it easy to send [Messagebird SMS notifications](https://githu
 
 ## Requirements
 
-- [Sign up](https://www.messagebird.com/en/signup) for a free MessageBird account
+- [Sign up](https://www.messagebird.com/en/signup) for a free Bird account
 - Create a new access_key in the developers sections
 
 ## Installation
@@ -34,7 +34,7 @@ This package makes it easy to send [Messagebird SMS notifications](https://githu
 You can install the package via composer:
 
 ``` bash
-composer require laravel-notification-channels/messagebird
+composer require vikilaboy/laravel-bird-notifications
 ```
 
 for Laravel 5.4 or lower, you must add the service provider to your config:
@@ -43,34 +43,35 @@ for Laravel 5.4 or lower, you must add the service provider to your config:
 // config/app.php
 'providers' => [
     ...
-    NotificationChannels\Messagebird\MessagebirdServiceProvider::class,
+    NotificationChannels\Bird\BirdServiceProvider::class,
 ],
 ```
 
-## Setting up your Messagebird account
+## Setting up your Bird account
 
 Add the environment variables to your `config/services.php`:
 
 ```php
 // config/services.php
 ...
-'messagebird' => [
-    'access_key' => env('MESSAGEBIRD_ACCESS_KEY'),
-    'originator' => env('MESSAGEBIRD_ORIGINATOR'),
-    'recipients' => env('MESSAGEBIRD_RECIPIENTS'),
-],
+    'bird' => [
+        'access_key' => env('BIRD_ACCESS_KEY'),
+        'originator' => env('BIRD_ORIGINATOR'),
+        'workspace' => env('BIRD_WORKSPACE'),
+        'channel' => env('BIRD_CHANNEL'),
+    ],
 ...
 ```
 
-Add your Messagebird Access Key, Default originator (name or number of sender), and default recipients to your `.env`:
+Add your Bird Access Key, Default originator (name or number of sender), and default recipients to your `.env`:
 
 ```php
 // .env
 ...
-MESSAGEBIRD_ACCESS_KEY=
-MESSAGEBIRD_ORIGINATOR=
-MESSAGEBIRD_RECIPIENTS=
-],
+BIRD_ACCESS_KEY=
+BIRD_ORIGINATOR=
+BIRD_WORKSPACE=
+BIRD_CHANNEL=
 ...
 ```
 
@@ -81,20 +82,20 @@ Notice: The originator can contain a maximum of 11 alfa-numeric characters.
 Now you can use the channel in your `via()` method inside the notification:
 
 ``` php
-use NotificationChannels\Messagebird\MessagebirdChannel;
-use NotificationChannels\Messagebird\MessagebirdMessage;
+use NotificationChannels\Bird\BirdChannel;
+use NotificationChannels\Bird\BirdMessage;
 use Illuminate\Notifications\Notification;
 
 class VpsServerOrdered extends Notification
 {
     public function via($notifiable)
     {
-        return [MessagebirdChannel::class];
+        return [BirdChannel::class];
     }
 
     public function toMessagebird($notifiable)
     {
-        return (new MessagebirdMessage("Your {$notifiable->service} was ordered!"));
+        return (new BirdMessage("Your {$notifiable->service} was ordered!"));
     }
 }
 ```
@@ -102,13 +103,13 @@ class VpsServerOrdered extends Notification
 Additionally you can add recipients (single value or array)
 
 ``` php
-return (new MessagebirdMessage("Your {$notifiable->service} was ordered!"))->setRecipients($recipients);
+return (new BirdMessage("Your {$notifiable->service} was ordered!"))->setRecipients($recipients);
 ```
 
 In order to handle a status report you can also set a reference
 
 ``` php
-return (new MessagebirdMessage("Your {$notifiable->service} was ordered!"))->setReference($id);
+return (new BirdMessage("Your {$notifiable->service} was ordered!"))->setReference($id);
 ```
 
 ## Changelog

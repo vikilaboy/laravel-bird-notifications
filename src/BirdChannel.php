@@ -1,6 +1,6 @@
 <?php
 
-namespace NotificationChannels\BIrd;
+namespace NotificationChannels\Bird;
 
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Notifications\Events\NotificationFailed;
@@ -9,11 +9,9 @@ use NotificationChannels\Messagebird\Exceptions\CouldNotSendNotification;
 
 class BirdChannel
 {
-    private Dispatcher $dispatcher;
 
-    public function __construct(public BirdClient $client, Dispatcher $dispatcher = null)
+    public function __construct(public BirdClient $client, protected Dispatcher $dispatcher)
     {
-        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -36,26 +34,27 @@ class BirdChannel
         }
 
         if ($to = $notifiable->routeNotificationFor('bird')) {
-            $message->setRecipients($to);
+            $message->setRecipients([$to]);
         }
 
         try {
             $data = $this->client->send($message);
+            $this->dispatcher->dispatch('BirdSms', [$notifiable, $notification, $data]);
 
-            if ($this->dispatcher !== null) {
-                $this->dispatcher->dispatch('bird-sms', [$notifiable, $notification, $data]);
-            }
-        } catch (CouldNotSendNotification $e) {
-            if ($this->dispatcher !== null) {
-                $this->dispatcher->dispatch(
-                    new NotificationFailed(
-                        $notifiable,
-                        $notification,
-                        'bird-sms',
-                        $e->getMessage()
-                    )
-                );
-            }
+            return $data;
+        } catch (CouldNotSendNotification $couldNotSendNotification) {
+            $this->dispatcher->dispatch(
+                new NotificationFailed(
+                    $notifiable,
+                    $notification,
+                    'BirdSmsException',
+                    [
+                        'message' => $couldNotSendNotification->getMessage(),
+                        'exception' => $couldNotSendNotification->getTraceAsString(),
+                        'code' => $couldNotSendNotification->getCode(),
+                    ]
+                )
+            );
         }
 
         return $data;
